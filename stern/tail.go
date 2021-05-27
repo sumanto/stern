@@ -59,6 +59,7 @@ type TailOptions struct {
 	Include      []*regexp.Regexp
 	Namespace    bool
 	TailLines    *int64
+	Follow       bool
 }
 
 func (o TailOptions) IsExclude(msg string) bool {
@@ -154,7 +155,7 @@ func (t *Tail) Start(ctx context.Context) error {
 	}
 
 	req := t.clientset.Pods(t.Namespace).GetLogs(t.PodName, &corev1.PodLogOptions{
-		Follow:       true,
+		Follow:       t.Options.Follow,
 		Timestamps:   t.Options.Timestamps,
 		Container:    t.ContainerName,
 		SinceSeconds: &t.Options.SinceSeconds,

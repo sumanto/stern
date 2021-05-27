@@ -60,6 +60,7 @@ type options struct {
 	output              string
 	prompt              bool
 	podQuery            string
+	follow              bool
 }
 
 func NewOptions(streams genericclioptions.IOStreams) *options {
@@ -78,6 +79,7 @@ func NewOptions(streams genericclioptions.IOStreams) *options {
 		timestamps:          false,
 		timezone:            "Local",
 		prompt:              false,
+		follow               true
 	}
 }
 
@@ -280,6 +282,7 @@ func (o *options) sternConfig() (*stern.Config, error) {
 		FieldSelector:         fieldSelector,
 		TailLines:             tailLines,
 		Template:              template,
+		Follow                 o.follow,
 
 		Out:    o.Out,
 		ErrOut: o.ErrOut,
@@ -312,6 +315,7 @@ func (o *options) AddFlags(fs *pflag.FlagSet) {
 	fs.Int64Var(&o.tail, "tail", o.tail, "The number of lines from the end of the logs to show. Defaults to -1, showing all logs.")
 	fs.StringVar(&o.template, "template", o.template, "Template to use for log lines, leave empty to use --output flag.")
 	fs.BoolVarP(&o.timestamps, "timestamps", "t", o.timestamps, "Print timestamps.")
+	fs.BoolVar(&o.follow, "follow", "f", o.follow, "Follow logs.")
 	fs.StringVar(&o.timezone, "timezone", o.timezone, "Set timestamps to specific timezone.")
 	fs.BoolVarP(&o.version, "version", "v", o.version, "Print the version and exit.")
 }
